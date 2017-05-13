@@ -1,0 +1,34 @@
+﻿body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+ul#main-menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+ul#main-menu li {
+    float: left;
+    margin: 1px;
+}
+
+ul#main-menu li a {
+    display: block;
+    padding: 16px;
+    color: brown;
+    background-color: antiquewhite;
+    text-decoration: none;
+    text-align: center;
+    font-size: x-large;
+}
+
+ul#main-menu li a:hover {
+    background-color:burlywood;
+}

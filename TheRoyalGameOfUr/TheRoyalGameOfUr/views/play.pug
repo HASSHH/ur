@@ -1,0 +1,14 @@
+﻿extends layout
+
+block content
+  script(type='text/javascript', src='/javascripts/ur.js')
+  h1= title
+  p Welcome to #{title}
+  
+  button(onclick='startNewGame()') Start New
+  br/
+  p Code:
+  input(type='text', id='join_game_code')
+  button(onclick='joinGame()') Join
+  p(id='output_p') asd
+  p(id='extra_info')
