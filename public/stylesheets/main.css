@@ -32,3 +32,30 @@ ul#main-menu li a {
 ul#main-menu li a:hover {
     background-color:burlywood;
 }
+
+#board {
+    width: 50%;
+    background-image: url('../images/board_old.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.cell {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    vertical-align: top;
+    position: relative;
+    width: 12%;
+    padding-top: 12%;
+}
+
+.cell-click-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0,0,255,0.7);
+    margin: 5%;
+}

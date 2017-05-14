@@ -7,6 +7,7 @@ var webSocketServer = require('websocket').server;
 
 var newGameAction = require('./actions/newgame').newGame;
 var joinGameAction = require('./actions/joingame').joinGame;
+var rollDiceAction = require('./actions/rolldice').rollDice;
 
 var wsServer = new webSocketServer({
     httpServer: httpserver,
@@ -21,22 +22,13 @@ wsServer.on('request', function (request) {
         var msg = JSON.parse(message.utf8Data);
         switch (msg.action) {
             case 'start-new-game':
-                console.log('before waiting');
-                for (var key in global.waitingRoom)
-                    console.log(key);
                 newGameAction(connection, msg.body);
-                console.log('after');
-                for (var key in global.waitingRoom)
-                    console.log(key);
                 break;
             case 'join-game':
-                console.log('before active');
-                for (var key in global.activeGames)
-                    console.log(key);
                 joinGameAction(connection, msg.body);
-                console.log('after');
-                for (var key in global.activeGames)
-                    console.log(key);
+                break;
+            case 'roll-dice':
+                rollDiceAction(connection, msg.body);
                 break;
             default:
                 break;

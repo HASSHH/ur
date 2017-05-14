@@ -6,7 +6,26 @@ var genCode = function () {
     return index++;
 }
 
+var removeFromActive = function (sender) {
+    for (var key in global.activeGames) {
+        var value = global.activeGames[key];
+        if (sender == value.whitePlayer) {
+            value.blackPlayer.sendUTF(JSON.stringify({ action: 'opponent-left' }));
+            delete global.activeGames[key];
+            break;
+        }
+        if (sender == value.blackPlayer) {
+            value.whitePlayer.sendUTF(JSON.stringify({ action: 'opponent-left' }));
+            delete global.activeGames[key];
+            break;
+        }
+    }
+}
+
 var newGame = function (sender, msg) {
+    //if the caller is in an active game remove that entry and notify the opponent
+    removeFromActive(sender);
+
     var prev;
     for (var key in global.waitingRoom)
     {
