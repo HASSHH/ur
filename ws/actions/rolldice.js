@@ -1,10 +1,24 @@
 ﻿'use strict'
 
+var utils = require('../utils');
+
 var genDice = function () {
     var dice = 0;
     for (var i = 0; i < 4; ++i)
         dice += Math.floor((Math.random() * 2));
     return dice;
+}
+
+var hasPossibleMoves = function (id) {
+    var game = global.activeGames[id];
+    if (typeof game !== 'undefined') {
+        var bs = game.boardState;
+        var ours = bs.toMove === 'white' ? bs.whitePieces : bs.blackPieces;
+        for (var i = 0; i < 15; ++i)
+            if (ours[i] > 0 && utils.checkMove(i, bs.toMove, id))
+                return true;
+    }
+    return false;
 }
 
 var rollDice = function (sender, msg) {
@@ -24,7 +38,10 @@ var rollDice = function (sender, msg) {
                 //if true respond only to the sender with the value of the dice
                 var resp = {
                     action: 'update-dice-roll',
-                    body: { dice: bs.dice }
+                    body: {
+                        dice: bs.dice,
+                        endTurn: false
+                    }
                 };
                 sender.sendUTF(JSON.stringify(resp));
             }
@@ -33,8 +50,16 @@ var rollDice = function (sender, msg) {
                 bs.dice = genDice();
                 var resp = {
                     action: 'update-dice-roll',
-                    body: { dice: bs.dice }
+                    body: {
+                        dice: bs.dice,
+                        endTurn: false
+                    }
                 };
+                if (bs.dice == 0 || !hasPossibleMoves(msg.id)) {
+                    resp.body.endTurn = true;
+                    bs.toMove = bs.toMove === 'white' ? 'black' : 'white';
+                    delete bs.dice;
+                }
                 sender.sendUTF(JSON.stringify(resp));
                 opponent.sendUTF(JSON.stringify(resp));
             }

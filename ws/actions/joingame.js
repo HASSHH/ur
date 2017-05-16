@@ -1,30 +1,6 @@
 ﻿'use strict'
 
-var removeFromWaiting = function (sender) {
-    for (var key in global.waitingRoom) {
-        var value = global.waitingRoom[key];
-        if (sender == value) {
-            delete global.waitingRoom[key];
-            break;
-        }
-    }
-}
-
-var removeFromActive = function (sender) {
-    for (var key in global.activeGames) {
-        var value = global.activeGames[key];
-        if (sender == value.whitePlayer) {
-            value.blackPlayer.sendUTF(JSON.stringify({ action: 'opponent-left' }));
-            delete global.activeGames[key];
-            break;
-        }
-        if (sender == value.blackPlayer) {
-            value.whitePlayer.sendUTF(JSON.stringify({ action: 'opponent-left' }));
-            delete global.activeGames[key];
-            break;
-        }
-    }
-}
+var utils = require('../utils');
 
 var joinGame = function (sender, msg) {
     if (typeof msg.code !== 'undefined' && msg.code !== null) {
@@ -34,8 +10,8 @@ var joinGame = function (sender, msg) {
                 //delete entry from waiting room
                 delete global.waitingRoom[key];
                 //if the client that joins has a game in the waiting room or is an active game remove those entries and notify the opponenet if it's the case
-                removeFromWaiting(sender);
-                removeFromActive(sender);
+                utils.removeFromWaiting(sender);
+                utils.removeFromActive(sender);
 
                 var rn = Math.floor((Math.random() * 2));
                 var wp, bp;
@@ -53,7 +29,9 @@ var joinGame = function (sender, msg) {
                     whitePlayer: wp,
                     blackPlayer: bp,
                     boardState: {
-                        toMove: 'white'
+                        toMove: 'white',
+                        whitePieces: [7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        blackPieces: [7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                     }
                 }
                 global.activeGames[msg.code] = newGame;
