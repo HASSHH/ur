@@ -17,7 +17,6 @@ var updateCellDOM = function(cell, color){
     cell = Number(cell);
     var cellValue = color === 'white' ? boardState.whitePieces[cell] : boardState.blackPieces[cell];
     //TO DO no text
-    var cellElmValue = color === 'white' ? 'W' + cellValue : 'B' + cellValue;
     var cellElmId = 'cell-' + cell + (cell < 5 || cell > 12 ? '-' + color : '-neutral');
     var cellElm = document.getElementById(cellElmId);
     if (cellValue == 0) {
@@ -28,19 +27,33 @@ var updateCellDOM = function(cell, color){
     else {
         var innerElm = cellElm.firstChild;
         if (!innerElm) {
-            innerElm = document.createElement('span');
-            innerElm.style.position = 'absolute';
-            innerElm.style.top = '0';
-            innerElm.style.bottom = '0';
-            innerElm.style.left = '0';
-            innerElm.style.right = '0';
-            innerElm.style.backgroundSize = 'contain';
-            innerElm.style.backgroundRepeat = 'no-repeat';
+            innerElm = document.createElement('div');
+            innerElm.classList.add('cell-piece');
             cellElm.appendChild(innerElm);
         }
         innerElm.style.backgroundImage = color === 'white' ? 'url(../images/whitepiece_old.png)' : 'url(../images/blackpiece_old.png)';
-        innerElm.innerHTML = cellElmValue;
+        if (cell === 0 || cell === 15) {
+            if (!innerElm.firstChild) {
+                var spanText = document.createElement('span');
+                innerElm.appendChild(spanText);
+            }
+            innerElm.firstChild.innerHTML = cellValue;
+        }
     }
+}
+
+var markedCellList = [];
+
+var markCell = function (cellId, markingColor) {
+    document.getElementById(cellId).style.backgroundImage = markingColor === 'green' ? 'url(../images/green_hl.png)' : 'url(../images/red_hl.png)';
+}
+
+var markCellTarget = function (cellId) {
+    document.getElementById(cellId).style.backgroundImage = 'url(../images/green_target.png)';
+}
+
+var unmarkCell = function (cellId) {
+    document.getElementById(cellId).style.backgroundImage = null;
 }
 
 var initBoardState = function () {
@@ -109,6 +122,7 @@ var updateWithMove = function (msg) {
     updateCellDOM(msg.start, boardState.toMove);
     updateCellDOM(msg.stop, boardState.toMove);
     boardState.toMove = msg.nextToMove;
+    delete boardState.dice;
 
     if (boardState.whitePieces[15] == 7)
         gameEnded('white');
@@ -211,19 +225,59 @@ var clickedCell = function (cellId) {
     if (playerColor === boardState.toMove) {
         var tokens = cellId.split('-');
         var chk = checkMove(tokens[1], tokens[2]);
-        if (typeof chk !== 'undefined' && chk.color === playerColor)
+        if (typeof chk !== 'undefined' && chk.color === playerColor) {
+            mouseOutCell(cellId);
+            var markRed = chk.color === 'white' ? (boardState.whitePieces[Number(tokens[1])] > 1) : (boardState.blackPieces[Number(tokens[1])] > 1);
+            if (markRed) {
+                markCell(cellId, 'red');
+                markedCellList.push(cellId);
+            }
             doMove(tokens[1]);
+        }
     }
 }
 
-var mouseOver = function (cellId) {
+var mouseOverCell = function (cellId) {
     var tokens = cellId.split('-');
-    console.log(tokens);
+    var cellInd = Number(tokens[1]);
+    if (typeof boardState.toMove !== 'undefined'
+        && typeof boardState.whitePieces !== 'undefined'
+        && typeof boardState.blackPieces !== 'undefined'
+        && (boardState.whitePieces[cellInd] > 0 || boardState.blackPieces[cellInd] > 0)) {
+
+        if (cellInd < 5 || cellInd > 12) {
+            if (tokens[2] === 'white' && boardState.whitePieces[cellInd] == 0)
+                return;
+            if (tokens[2] === 'black' && boardState.blackPieces[cellInd] == 0)
+                return;
+        }
+        markedCellList.push(cellId);
+        var pieceColor = tokens[2] !== 'neutral' ? tokens[2] : (boardState.whitePieces[cellInd] > 0 ? 'white' : 'black');
+        if (playerColor === pieceColor && playerColor === boardState.toMove && typeof boardState.dice !== 'undefined') {
+            var chk = checkMove(tokens[1], tokens[2]);
+            if (typeof chk !== 'undefined') {
+                markCell(cellId, 'green');
+                var targetCellPieceColor = chk.endSquare > 4 && chk.endSquare < 13 ? 'neutral' : pieceColor;
+                var targetCellId = tokens[0] + '-' + chk.endSquare + '-' + targetCellPieceColor;
+                markCellTarget(targetCellId);
+                markedCellList.push(targetCellId);
+            }
+            else
+                markCell(cellId, 'red');
+        }
+        else
+            markCell(cellId, 'red');
+    }
+}
+
+var mouseOutCell = function (cellId) {
+    while (markedCellList.length > 0)
+        unmarkCell(markedCellList.pop());
 }
 
 var clickableCells = document.getElementsByClassName('cell-click-zone');
 for (var i = 0, len = clickableCells.length; i < len; i++) {
     clickableCells[i].addEventListener("click", function () { clickedCell(this.id); });
-    clickableCells[i].addEventListener("mouseover", function () { mouseOver(this.id); });
+    clickableCells[i].addEventListener("mouseover", function () { mouseOverCell(this.id); });
+    clickableCells[i].addEventListener("mouseout", function () { mouseOutCell(this.id); });
 }
-

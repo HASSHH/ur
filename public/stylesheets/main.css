@@ -46,8 +46,8 @@ ul#main-menu li a:hover {
     zoom: 1;
     vertical-align: top;
     position: relative;
-    width: 12%;
-    padding-top: 12%;
+    width: 12.5%;
+    padding-top: 12.5%;
 }
 
 .cell-click-zone {
@@ -57,4 +57,28 @@ ul#main-menu li a:hover {
     bottom: 0;
     right: 0;
     margin: 5%;
+    height: 100%;
+    width: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
+
+.cell-piece {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+    .cell-piece span {
+        font-size: 3vw;
+        color: white;
+        display: block;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
