@@ -35,6 +35,7 @@ var joinGame = function (sender, msg) {
                     }
                 }
                 global.activeGames[msg.code] = newGame;
+                sender.urActiveGame = msg.code;
                 var resp = {
                     action: "game-started",
                     body: {

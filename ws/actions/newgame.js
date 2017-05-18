@@ -12,25 +12,19 @@ var genCode = function () {
 var newGame = function (sender, msg) {
     //if the caller is in an active game remove that entry and notify the opponent
     utils.removeFromActive(sender);
-
-    var prev;
-    for (var key in global.waitingRoom)
-    {
-        var value = global.waitingRoom[key];
-        if (value == sender)
-            prev = key;
-    }
+    
     var resp = {
         action: "wait-for-game",
         body: {}
     };
-    if (prev == undefined) {
-        var code = genCode();
-        global.waitingRoom[code] = sender;
-        resp.body.code = code.toString();
+    if (typeof sender.urWaitingGame !== 'undefined') {
+        resp.body.code = sender.urWaitingGame.toString();
     }
     else {
-        resp.body.code = prev;
+        var code = genCode();
+        global.waitingRoom[code] = sender;
+        sender.urWaitingGame = code;
+        resp.body.code = code.toString();
     }
     sender.sendUTF(JSON.stringify(resp));
 }

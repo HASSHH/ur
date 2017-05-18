@@ -1,27 +1,24 @@
 ﻿'use strict'
 
 var removeFromWaiting = function (sender) {
-    for (var key in global.waitingRoom) {
-        var value = global.waitingRoom[key];
-        if (sender == value) {
-            delete global.waitingRoom[key];
-            break;
-        }
+    if (typeof sender.urWaitingGame !== 'undefined') {
+        delete global.waitingRoom[sender.urWaitingGame];
+        delete sender.urWaitingGame;
     }
 }
 
 var removeFromActive = function (sender) {
-    for (var key in global.activeGames) {
+    if (typeof sender.urActiveGame !== 'undefined') {
+        var key = sender.urActiveGame;
+        delete sender.urActiveGame;
         var value = global.activeGames[key];
         if (sender == value.whitePlayer) {
             value.blackPlayer.sendUTF(JSON.stringify({ action: 'opponent-left' }));
             delete global.activeGames[key];
-            break;
         }
         if (sender == value.blackPlayer) {
             value.whitePlayer.sendUTF(JSON.stringify({ action: 'opponent-left' }));
             delete global.activeGames[key];
-            break;
         }
     }
 }
