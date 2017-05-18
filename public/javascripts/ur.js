@@ -19,18 +19,12 @@ var updateCellDOM = function(cell, color){
     //TO DO no text
     var cellElmId = 'cell-' + cell + (cell < 5 || cell > 12 ? '-' + color : '-neutral');
     var cellElm = document.getElementById(cellElmId);
+    var innerElm = cellElm.firstChild;
     if (cellValue == 0) {
         //remove cell display
-        if (cellElm.firstChild)
-            cellElm.removeChild(cellElm.firstChild);
+        innerElm.style.backgroundImage = null;
     }
     else {
-        var innerElm = cellElm.firstChild;
-        if (!innerElm) {
-            innerElm = document.createElement('div');
-            innerElm.classList.add('cell-piece');
-            cellElm.appendChild(innerElm);
-        }
         innerElm.style.backgroundImage = color === 'white' ? 'url(../images/whitepiece_old.png)' : 'url(../images/blackpiece_old.png)';
         if (cell === 0 || cell === 15) {
             if (!innerElm.firstChild) {
