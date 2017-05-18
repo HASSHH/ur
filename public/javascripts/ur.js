@@ -1,4 +1,4 @@
-﻿var socket = new WebSocket('ws://localhost:1337', 'ur-protocol');
+﻿var socket = new WebSocket('ws://ur-ur.1d35.starter-us-east-1.openshiftapps.com/', 'ur-protocol');
 var gameId, playerColor;
 var boardState = {};
 
