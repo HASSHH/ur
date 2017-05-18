@@ -83,8 +83,7 @@ var gameStarted = function (msg) {
 }
 
 var opponentLeft = function (msg) {
-    //TO DO zxc
-    document.getElementById('extra_info').innerHTML = JSON.stringify(msg);
+    gameEnded('disconnected');
 }
 
 var updateDiceRoll = function (msg) {
@@ -141,6 +140,9 @@ socket.onmessage = function (message) {
             break;
         case 'update-with-move':
             updateWithMove(msg.body);
+            break;
+        case 'opponent-left':
+            opponentLeft(msg.body);
             break;
         default:
             break;

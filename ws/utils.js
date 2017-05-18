@@ -10,16 +10,17 @@ var removeFromWaiting = function (sender) {
 var removeFromActive = function (sender) {
     if (typeof sender.urActiveGame !== 'undefined') {
         var key = sender.urActiveGame;
-        delete sender.urActiveGame;
         var value = global.activeGames[key];
-        if (sender == value.whitePlayer) {
-            value.blackPlayer.sendUTF(JSON.stringify({ action: 'opponent-left' }));
-            delete global.activeGames[key];
-        }
-        if (sender == value.blackPlayer) {
-            value.whitePlayer.sendUTF(JSON.stringify({ action: 'opponent-left' }));
-            delete global.activeGames[key];
-        }
+        var opponent;
+        if (sender == value.whitePlayer)
+            opponent = value.blackPlayer;
+        else
+            opponent = value.whitePlayer;
+
+        delete global.activeGames[key];
+        delete sender.urActiveGame;
+        delete opponent.urActiveGame;
+        opponent.sendUTF(JSON.stringify({ action: 'opponent-left' }));
     }
 }
 
