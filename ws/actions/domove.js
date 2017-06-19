@@ -56,8 +56,11 @@ var doMove = function (sender, msg) {
                 };
                 executeMove(msg.cell, moveResult.endSquare, color, msg.id);
                 delete bs.dice;
-                if (bs.whitePieces[15] == 7 || bs.blackPieces[15] == 7)
+                if (bs.whitePieces[15] == 7 || bs.blackPieces[15] == 7) {
                     delete global.activeGames[msg.id];
+                    delete sender.urActiveGame;
+                    delete opponent.urActiveGame;
+                }
                 sender.sendUTF(JSON.stringify(resp));
                 opponent.sendUTF(JSON.stringify(resp));
             }

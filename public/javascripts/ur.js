@@ -16,7 +16,6 @@ var gameEnded = function (victor) {
 var updateCellDOM = function(cell, color){
     cell = Number(cell);
     var cellValue = color === 'white' ? boardState.whitePieces[cell] : boardState.blackPieces[cell];
-    //TO DO no text
     var cellElmId = 'cell-' + cell + (cell < 5 || cell > 12 ? '-' + color : '-neutral');
     var cellElm = document.getElementById(cellElmId);
     var innerElm = cellElm.firstChild;
@@ -25,13 +24,20 @@ var updateCellDOM = function(cell, color){
         innerElm.style.backgroundImage = null;
     }
     else {
+        var rotationAngle = Math.floor((Math.random() * 360));
         innerElm.style.backgroundImage = color === 'white' ? 'url(../images/whitepiece_old.png)' : 'url(../images/blackpiece_old.png)';
+        innerElm.style.transform = 'rotate(' + rotationAngle + 'deg)';
         if (cell === 0 || cell === 15) {
             if (!innerElm.firstChild) {
                 var spanText = document.createElement('span');
                 innerElm.appendChild(spanText);
             }
             innerElm.firstChild.innerHTML = cellValue;
+            var rotationAngleCorrection = -rotationAngle;
+            if (playerColor === 'black')
+                rotationAngleCorrection += 180;
+            //correct rotation AFTER centering text
+            innerElm.firstChild.style.transform = 'translateY(-50%) rotate(' + rotationAngleCorrection + 'deg)';
         }
     }
 }
@@ -61,8 +67,8 @@ var initBoardState = function () {
 }
 
 var waitForGame = function (msg) {
-    //TO DO asd
-    document.getElementById('extra_info').innerHTML = JSON.stringify(msg);
+    document.getElementById('game-code-display').innerHTML = msg.code;
+    showWaitingDiv();
 }
 
 var gameStarted = function (msg) {
@@ -76,10 +82,9 @@ var gameStarted = function (msg) {
         board.style.transform = null;
 
     initBoardState();
-
-    //TO DO wqe
-    document.getElementById('game_id').innerHTML = JSON.stringify(gameId);
-    document.getElementById('player_color').innerHTML = JSON.stringify(playerColor);
+    
+    document.getElementById('game-id').innerHTML = 'Game ID: ' + gameId;
+    showBoardDiv();
 }
 
 var opponentLeft = function (msg) {
@@ -92,7 +97,7 @@ var updateDiceRoll = function (msg) {
         boardState.toMove = boardState.toMove === 'white' ? 'black' : 'white';
 
     //TO DO hgfg
-    document.getElementById('dice_value').innerHTML = JSON.stringify(boardState.dice);
+    document.getElementById('dice-value').innerHTML = 'Dice value: ' + boardState.dice;
 }
 
 var updateWithMove = function (msg) {
@@ -161,7 +166,7 @@ var startNewGame = function () {
 }
 
 var joinGame = function () {
-    var code = document.getElementById('join_game_code').value;
+    var code = document.getElementById('join-game-code').value;
     var msg = {
         action: 'join-game',
         body: {
@@ -276,4 +281,66 @@ for (var i = 0, len = clickableCells.length; i < len; i++) {
     clickableCells[i].addEventListener("click", function () { clickedCell(this.id); });
     clickableCells[i].addEventListener("mouseover", function () { mouseOverCell(this.id); });
     clickableCells[i].addEventListener("mouseout", function () { mouseOutCell(this.id); });
+}
+
+// ------------------------------- //
+// ---- NOT GAMEPLAY RELATED ----- //
+// ------------------------------- //
+
+
+var activeElm = document.getElementById("intro-div");
+var showBoardDiv = function () {
+    var old = activeElm;
+    activeElm = document.getElementById("board-div");
+    fadeout(old, function () {
+        fadein(activeElm, null);
+    });
+}
+var showWaitingDiv = function () {
+    var old = activeElm;
+    activeElm = document.getElementById("waiting-div");
+    fadeout(old, function () {
+        fadein(activeElm, null);
+    });
+}
+var showJoinDiv = function () {
+    var old = activeElm;
+    activeElm = document.getElementById("join-div");
+    fadeout(old, function () {
+        fadein(activeElm, null);
+    });
+}
+
+function fadeout(element, callback) {
+    var op = 1;  // initial opacity
+    element.style.opacity = op;
+    element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+    var timer = setInterval(function () {
+        if (op <= 0.1) {
+            clearInterval(timer);
+            element.style.display = 'none';
+            if (callback)
+                callback();
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op -= op * 0.1;
+    }, 20);
+}
+
+function fadein(element, callback) {
+    var op = 0.05;  // initial opacity
+    element.style.opacity = op;
+    element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+    element.style.display = 'block';
+    var timer = setInterval(function () {
+        if (op >= 1) {
+            clearInterval(timer);
+            if (callback)
+                callback();
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op += op * 0.05;
+    }, 5);
 }

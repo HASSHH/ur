@@ -7,7 +7,27 @@ a {
     color: #00B7FF;
 }
 
-.cache-img {
+.swap-div {
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+    border: 3px solid red;
+    float: left;
+    display: none;
+    width: 100%;
+}
+
+#board-div{
+    text-align: left;
+}
+
+#swap-div-container{
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.hidden-elm {
     display: none;
     visibility: hidden;
 }

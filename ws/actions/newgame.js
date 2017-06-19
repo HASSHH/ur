@@ -2,11 +2,19 @@
 
 var utils = require('../utils');
 
-var index = 1;
+var codeLength = 6;
+var possibleCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 var genCode = function () {
-    //TO DO not incremented code
-    return index++;
+    var charCount = possibleCharacters.length;
+    var code;
+    do {
+        code = '';
+        for (var i = 0; i < codeLength; ++i)
+            code += possibleCharacters.charAt(Math.floor(Math.random() * charCount));
+        //while code is duplicate
+    } while (typeof global.waitingRoom[code] !== 'undefined' || typeof global.activeGames[code] !== 'undefined');
+    return code;
 }
 
 var newGame = function (sender, msg) {
@@ -14,7 +22,7 @@ var newGame = function (sender, msg) {
     utils.removeFromActive(sender);
     
     var resp = {
-        action: "wait-for-game",
+        action: 'wait-for-game',
         body: {}
     };
     if (typeof sender.urWaitingGame !== 'undefined') {

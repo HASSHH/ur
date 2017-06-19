@@ -37,7 +37,7 @@ var joinGame = function (sender, msg) {
             sender.urActiveGame = msg.code;
             host.urActiveGame = msg.code;
             var resp = {
-                action: "game-started",
+                action: 'game-started',
                 body: {
                     id: msg.code.toString()
                 }
