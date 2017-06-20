@@ -1,4 +1,4 @@
-﻿var socket = new WebSocket('ws://localhost:1337', 'ur-protocol');
+﻿var socket = new WebSocket('wss://the-royal-game-of-ur.herokuapp.com/', 'ur-protocol');
 var gameId, playerColor;
 var boardState = {};
 
