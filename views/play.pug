@@ -19,11 +19,12 @@ block content
         button(onclick='joinGame()') Join
 
       div(class='swap-div', id='board-div')
-        div(id='top-board-display')
-          h2(id='message-display') It's your turn. 
-          button Roll dice
-        p(id='game-id')
-        div(id='board')
+        div(id='board-container')
+          div(id='top-board-display')
+            h2(id='message-display') It's your turn. 
+            button Roll dice
+          p(id='game-id')
+          div(id='board')
             div
               div(class='cell')
                 div(class='cell-click-zone', id='cell-4-black')

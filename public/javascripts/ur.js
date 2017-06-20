@@ -1,4 +1,4 @@
-﻿var socket = new WebSocket('wss://the-royal-game-of-ur.herokuapp.com/', 'ur-protocol');
+﻿var socket = new WebSocket('ws://localhost:1337', 'ur-protocol');
 var gameId, playerColor;
 var boardState = {};
 
@@ -111,7 +111,11 @@ var updateDiceRoll = function (msg) {
         notifyPlayerTurnPhaseTwo();
 
     //TO DO hgfg
-    document.getElementById('dice-value').innerHTML = 'Dice value: ' + msg.dice;
+    var diceElm = document.getElementById('dice-value');
+    fadeout(diceElm, function () {
+        diceElm.innerHTML = 'Dice value: ' + msg.dice;
+        fadein(diceElm, null);
+    });
 }
 
 var updateWithMove = function (msg) {
