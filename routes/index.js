@@ -9,7 +9,7 @@ router.get('/', function (req, res) {
 
 /* GET play page. */
 router.get('/play', function (req, res) {
-    res.render('play', { title: 'Play' });
+    res.render('play');
 });
 
 module.exports = router;

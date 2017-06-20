@@ -1,9 +1,6 @@
 ﻿extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  
   div(id='swap-div-container')
       div(class='swap-div', id='intro-div', style='display: block;')
         p Start new game:
@@ -22,8 +19,10 @@ block content
         button(onclick='joinGame()') Join
 
       div(class='swap-div', id='board-div')
+        div(id='top-board-display')
+          h2(id='message-display') It's your turn. 
+          button Roll dice
         p(id='game-id')
-        button(onclick='rollDice()', style='margin: 20px;') Roll Dice
         div(id='board')
             div
               div(class='cell')
@@ -101,8 +100,6 @@ block content
                 div(class='cell-click-zone', id='cell-13-white')
                   div(class='cell-piece')
         h3(id='dice-value')
-        p(id='output_p') asd
-        p(id='extra_info')
 
   img(class='hidden-elm', src='../images/red_hl.png', alt='red_hl')
   img(class='hidden-elm', src='../images/green_hl.png', alt='green_hl')

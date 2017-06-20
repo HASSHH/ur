@@ -8,8 +8,10 @@ var gameEnded = function (victor) {
     gameId = undefined;
     playerColor = undefined;
 
-    //TO DO
-    document.getElementById('extra_info').innerHTML = victor + ' victory';
+    if (victor === 'disconnected')
+        notifyOpponentLeft();
+    else
+        notifyVictory(victor);
 }
 
 
@@ -84,6 +86,10 @@ var gameStarted = function (msg) {
     initBoardState();
     
     document.getElementById('game-id').innerHTML = 'Game ID: ' + gameId;
+    if (msg.color === 'white')
+        notifyPlayerTurnPhaseOne();
+    else
+        notifyOpponentTurn();
     showBoardDiv();
 }
 
@@ -93,11 +99,19 @@ var opponentLeft = function (msg) {
 
 var updateDiceRoll = function (msg) {
     boardState.dice = msg.dice;
-    if (msg.endTurn === true)
+    if (msg.endTurn === true) {
         boardState.toMove = boardState.toMove === 'white' ? 'black' : 'white';
+        delete boardState.dice;
+        if (boardState.toMove === playerColor)
+            notifyPlayerTurnPhaseOne();
+        else
+            notifyOpponentTurn();
+    }
+    else if (boardState.toMove === playerColor)
+        notifyPlayerTurnPhaseTwo();
 
     //TO DO hgfg
-    document.getElementById('dice-value').innerHTML = 'Dice value: ' + boardState.dice;
+    document.getElementById('dice-value').innerHTML = 'Dice value: ' + msg.dice;
 }
 
 var updateWithMove = function (msg) {
@@ -126,12 +140,16 @@ var updateWithMove = function (msg) {
         gameEnded('white');
     else if (boardState.blackPieces[15] == 7)
         gameEnded('black');
+    //else we notify who's next to move
+    else if (boardState.toMove === playerColor)
+        notifyPlayerTurnPhaseOne();
+    else
+        notifyOpponentTurn();
     //TO DO maybe tell who is to move... or highlight roll dice button etc
 }
 
 //From ws server
 socket.onmessage = function (message) {
-    document.getElementById('output_p').innerHTML = message.data;
     var msg = JSON.parse(message.data);
     switch (msg.action) {
         case 'wait-for-game':
@@ -185,6 +203,55 @@ var doMove = function (move) {
         }
     };
     socket.send(JSON.stringify(msg));
+}
+
+//notifications messages
+
+var notifyPlayerTurnPhaseOne = function () {
+    var tbd = document.getElementById('top-board-display');
+    //remove children nodes
+    while (tbd.lastChild)
+        tbd.removeChild(tbd.lastChild);
+    //creating and adding the new children
+    var message = document.createElement('h2');
+    message.innerHTML = 'It\'s your turn. ';
+    var rollDiceButton = document.createElement('button');
+    rollDiceButton.innerHTML = 'Roll Dice';
+    rollDiceButton.onclick = rollDice;
+    tbd.appendChild(message);
+    tbd.appendChild(rollDiceButton);
+}
+var notifyPlayerTurnPhaseTwo = function () {
+    var tbd = document.getElementById('top-board-display');
+    while (tbd.lastChild)
+        tbd.removeChild(tbd.lastChild);
+    var message = document.createElement('h2');
+    message.innerHTML = 'It\'s your turn. ';
+    tbd.appendChild(message);
+}
+var notifyOpponentTurn = function () {
+    var tbd = document.getElementById('top-board-display');
+    while (tbd.lastChild)
+        tbd.removeChild(tbd.lastChild);
+    var message = document.createElement('h2');
+    message.innerHTML = 'It\'s opponent\'s turn.';
+    tbd.appendChild(message);
+}
+var notifyOpponentLeft = function () {
+    var tbd = document.getElementById('top-board-display');
+    while (tbd.lastChild)
+        tbd.removeChild(tbd.lastChild);
+    var message = document.createElement('h2');
+    message.innerHTML = 'Opponent has left.';
+    tbd.appendChild(message);
+}
+var notifyVictory = function (color) {
+    var tbd = document.getElementById('top-board-display');
+    while (tbd.lastChild)
+        tbd.removeChild(tbd.lastChild);
+    var message = document.createElement('h2');
+    message.innerHTML = color + ' is victorious.';
+    tbd.appendChild(message);
 }
 
 //Other
