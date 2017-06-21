@@ -42,12 +42,15 @@ var joinGame = function (sender, msg) {
                     id: msg.code.toString()
                 }
             };
-            //notify white client
+            //notify white player
             resp.body.color = 'white';
             newGame.whitePlayer.sendUTF(JSON.stringify(resp));
-            //notify black client
+            //notify black player
             resp.body.color = 'black';
             newGame.blackPlayer.sendUTF(JSON.stringify(resp));
+            //clear rematch flag
+            newGame.whitePlayer.calledRematch = false;
+            newGame.blackPlayer.calledRematch = false;
         }
 }
 

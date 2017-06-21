@@ -5,13 +5,8 @@ var boardState = {};
 
 var gameEnded = function (victor) {
     boardState = {};
-    gameId = undefined;
     playerColor = undefined;
-
-    if (victor === 'disconnected')
-        notifyOpponentLeft();
-    else
-        notifyVictory(victor);
+    notifyVictory(victor);
 }
 
 
@@ -27,7 +22,7 @@ var updateCellDOM = function(cell, color){
     }
     else {
         var rotationAngle = Math.floor((Math.random() * 360));
-        innerElm.style.backgroundImage = color === 'white' ? 'url(../images/whitepiece_old.png)' : 'url(../images/blackpiece_old.png)';
+        innerElm.style.backgroundImage = color === 'white' ? 'url(/images/whitepiece_old.png)' : 'url(/images/blackpiece_old.png)';
         innerElm.style.transform = 'rotate(' + rotationAngle + 'deg)';
         if (cell === 0 || cell === 15) {
             if (!innerElm.firstChild) {
@@ -47,11 +42,11 @@ var updateCellDOM = function(cell, color){
 var markedCellList = [];
 
 var markCell = function (cellId, markingColor) {
-    document.getElementById(cellId).style.backgroundImage = markingColor === 'green' ? 'url(../images/green_hl.png)' : 'url(../images/red_hl.png)';
+    document.getElementById(cellId).style.backgroundImage = markingColor === 'green' ? 'url(/images/green_hl.png)' : 'url(/images/red_hl.png)';
 }
 
 var markCellTarget = function (cellId) {
-    document.getElementById(cellId).style.backgroundImage = 'url(../images/green_target.png)';
+    document.getElementById(cellId).style.backgroundImage = 'url(/images/green_target.png)';
 }
 
 var unmarkCell = function (cellId) {
@@ -84,7 +79,8 @@ var gameStarted = function (msg) {
         board.style.transform = null;
 
     initBoardState();
-    
+
+    document.getElementById('dice-value').innerHTML = '';
     document.getElementById('game-id').innerHTML = 'Game ID: ' + gameId;
     if (msg.color === 'white')
         notifyPlayerTurnPhaseOne();
@@ -94,7 +90,10 @@ var gameStarted = function (msg) {
 }
 
 var opponentLeft = function (msg) {
-    gameEnded('disconnected');
+    boardState = {};
+    gameId = undefined;
+    playerColor = undefined;
+    notifyOpponentLeft();
 }
 
 var updateDiceRoll = function (msg) {
@@ -177,6 +176,13 @@ socket.onmessage = function (message) {
 }
 
 //To server
+var rematch = function () {
+    if (typeof gameId !== 'undefined') {
+        socket.send(JSON.stringify({ action: 'rematch', body: { id: gameId } }));
+        notifyWaitingRematch();
+    }
+}
+
 var rollDice = function () {
     if (typeof boardState.toMove !== 'undefined' && typeof playerColor !== 'undefined' && typeof gameId !== 'undefined')
         if(playerColor === boardState.toMove)
@@ -255,7 +261,27 @@ var notifyVictory = function (color) {
         tbd.removeChild(tbd.lastChild);
     var message = document.createElement('h2');
     message.innerHTML = color + ' is victorious.';
+    var rematchButton = document.createElement('button');
+    rematchButton.innerHTML = 'Rematch';
+    rematchButton.onclick = rematch;
     tbd.appendChild(message);
+    tbd.appendChild(rematchButton);
+}
+var notifyWaitingRematch = function () {
+    var tbd = document.getElementById('top-board-display');
+    while (tbd.lastChild)
+        tbd.removeChild(tbd.lastChild);
+    var message = document.createElement('h2');
+    message.innerHTML = 'Waiting for opponent to accept the rematch.   ';
+    var loadingImage = document.createElement('img');
+    loadingImage.src = '/images/loading.gif';
+    loadingImage.alt = 'waiting...';
+    loadingImage.width = '20px';
+    loadingImage.height = '20px';
+    loadingImage.style.width = '20px';
+    loadingImage.style.height = '20px';
+    tbd.appendChild(message);
+    tbd.appendChild(loadingImage);
 }
 
 //Other

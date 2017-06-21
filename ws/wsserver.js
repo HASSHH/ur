@@ -10,6 +10,7 @@ var newGameAction = require('./actions/newgame').newGame;
 var joinGameAction = require('./actions/joingame').joinGame;
 var rollDiceAction = require('./actions/rolldice').rollDice;
 var doMoveAction = require('./actions/domove').doMove;
+var rematchAction = require('./actions/rematch').rematch;
 
 var wsServer = new webSocketServer({
     httpServer: httpserver,
@@ -34,6 +35,9 @@ wsServer.on('request', function (request) {
                 break;
             case 'do-move':
                 doMoveAction(connection, msg.body);
+                break;
+            case 'rematch':
+                rematchAction(connection, msg.body);
                 break;
             default:
                 break;

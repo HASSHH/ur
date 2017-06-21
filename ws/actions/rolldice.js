@@ -24,7 +24,7 @@ var hasPossibleMoves = function (id) {
 var rollDice = function (sender, msg) {
     if (typeof msg.id !== 'undefined' && msg.id !== null) {
         var game = global.activeGames[msg.id];
-        if (typeof game !== 'undefined') {
+        if (typeof game !== 'undefined' && game.boardState != null) {
             var bs = game.boardState;
             var opponent;
             if (bs.toMove === 'white' && game.whitePlayer == sender)

@@ -25,7 +25,7 @@ var doMove = function (sender, msg) {
     if (typeof msg.cell !== 'undefined' && msg.cell !== null
         && typeof msg.id !== 'undefined' && msg.id !== null) {
         var game = global.activeGames[msg.id];
-        if (typeof game !== 'undefined') {
+        if (typeof game !== 'undefined' && game.boardState != null) {
             var bs = game.boardState;
             var color;
             var opponent;
@@ -56,10 +56,9 @@ var doMove = function (sender, msg) {
                 };
                 executeMove(msg.cell, moveResult.endSquare, color, msg.id);
                 delete bs.dice;
+                //if game is over clear boardState to prepare for a possible rematch
                 if (bs.whitePieces[15] == 7 || bs.blackPieces[15] == 7) {
-                    delete global.activeGames[msg.id];
-                    delete sender.urActiveGame;
-                    delete opponent.urActiveGame;
+                    game.boardState = null;
                 }
                 sender.sendUTF(JSON.stringify(resp));
                 opponent.sendUTF(JSON.stringify(resp));
