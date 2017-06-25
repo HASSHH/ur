@@ -17,10 +17,24 @@ var removeFromActive = function (sender) {
         else
             opponent = value.whitePlayer;
 
+        removeAllSpectators(value);
         delete global.activeGames[key];
         delete sender.urActiveGame;
         delete opponent.urActiveGame;
+        //remove game from spectating list too
+        delete global.spectateGameList[key];
         opponent.sendUTF(JSON.stringify({ action: 'opponent-left' }));
+    }
+}
+
+var removeSpectator = function (sender) {
+    if (typeof sender.urSpectatingGame !== 'undefined') {
+        var key = sender.urSpectatingGame;
+        if (typeof global.activeGames[key] !== 'undefined') {
+            var game = global.activeGames[key];
+            game.spectators = game.spectators.filter(e => e !== sender);
+        }
+        delete sender.urSpectatingGame;
     }
 }
 
@@ -63,4 +77,11 @@ var checkMove = function (cell, color, id) {
 
 exports.removeFromWaiting = removeFromWaiting;
 exports.removeFromActive = removeFromActive;
+exports.removeSpectator = removeSpectator;
 exports.checkMove = checkMove;
+
+var removeAllSpectators = function (game) {
+    for (var spec in game.spectators)
+        delete spec.urSpectatingGame;
+    game.spectators = [];
+}

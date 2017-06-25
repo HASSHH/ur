@@ -31,8 +31,20 @@ var rematch = function (sender, msg) {
                 resp.body.color = 'black';
                 game.blackPlayer.sendUTF(JSON.stringify(resp));
                 //clear rematch flag
-                game.whitePlayer.calledRematch = false;;
-                game.blackPlayer.calledRematch = false;;
+                game.whitePlayer.calledRematch = false;
+                game.blackPlayer.calledRematch = false;
+
+                //send to all spectators
+                var spectatorResp = {
+                    action: 'start-spectating',
+                    body: {
+                        id: game.id,
+                        boardState: game.boardState,
+                    }
+                };
+                var specCount = game.spectators.length;
+                for (var i = 0; i < specCount; ++i)
+                    game.spectators[i].sendUTF(JSON.stringify(spectatorResp));
             }
         }
     }

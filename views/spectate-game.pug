@@ -1,29 +1,11 @@
 ﻿extends layout
 
 block content
-  link(rel='stylesheet', href='/stylesheets/ur.css')
-  div(id='swap-div-container')
-      div(class='swap-div', id='intro-div', style='display: block;')
-        p Start new game:
-        button(onclick='startNewGame()') New Game
-        p Or join a game
-        button(onclick='showJoinDiv()') Join Game
-
-      div(class='swap-div', id='waiting-div')
-        p Waiting for opponent to join with the following code:
-        h3(id='game-code-display')
-
-      div(class='swap-div', id='join-div')
-        p Game code:
-        input(type='text', id='join-game-code')
-        br/
-        button(onclick='joinGame()') Join
-
-      div(class='swap-div', id='board-div')
-        div(id='board-container')
-          div(id='top-board-display')
-          p(id='game-id')
-          div(id='board')
+    link(rel='stylesheet', href='/stylesheets/ur.css')
+    h2(id='game-id')
+    div(class='swap-div', id='board-container', style='display: block; text-align: left;')
+        div(id='top-board-display')
+        div(id='board')
             div
               div(class='cell')
                 div(class='cell-click-zone', id='cell-4-black')
@@ -101,9 +83,10 @@ block content
                   div(class='cell-piece')
         h3(id='dice-value')
 
-  img(class='hidden-elm', src='/images/red_hl.png', alt='red_hl')
-  img(class='hidden-elm', src='/images/green_hl.png', alt='green_hl')
-  img(class='hidden-elm', src='/images/green_target.png', alt='green_target')
-  img(class='hidden-elm', src='/images/loading.gif', alt='loading_gif')
-  
-  script(type='text/javascript', src='/javascripts/ur.js')
+    img(class='hidden-elm', src='/images/red_hl.png', alt='red_hl')
+    img(class='hidden-elm', src='/images/green_hl.png', alt='green_hl')
+    img(class='hidden-elm', src='/images/green_target.png', alt='green_target')
+    img(class='hidden-elm', src='/images/loading.gif', alt='loading_gif')
+    script(type='text/javascript', src='/javascripts/ur_spectate.js')
+    script.
+      startSpectating('#{id}');

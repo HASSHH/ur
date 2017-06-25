@@ -7,32 +7,6 @@ a {
     color: #00B7FF;
 }
 
-.swap-div {
-    margin-top: 50px;
-    padding: 10px;
-    text-align: center;
-    font-size: 20px;
-    border: 3px solid red;
-    float: left;
-    display: none;
-    width: 100%;
-}
-
-#board-div{
-    text-align: left;
-}
-
-#swap-div-container{
-    position: relative;
-    margin: 0 auto;
-    width: 100%;
-}
-
-.hidden-elm {
-    display: none;
-    visibility: hidden;
-}
-
 ul#main-menu {
     list-style-type: none;
     margin: 0;
@@ -40,84 +14,22 @@ ul#main-menu {
     overflow: hidden;
 }
 
-ul#main-menu li {
-    float: left;
-    margin: 1px;
-}
-
-ul#main-menu li a {
-    width: 100px;
-    display: block;
-    padding: 16px;
-    color: brown;
-    background-color: antiquewhite;
-    text-decoration: none;
-    text-align: center;
-    font-size: x-large;
-}
-
-ul#main-menu li a:hover {
-    background-color:burlywood;
-}
-
-#top-board-display{
-    height: 50px;
-    text-align: center;
-}
-
-#top-board-display > * {
-    display: inline;
-}
-
-#board-container {
-    width: 60%;
-}
-
-#board {
-    background-image: url('../images/board_old.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-.cell {
-    display: inline-block;
-    *display: inline;
-    zoom: 1;
-    vertical-align: top;
-    position: relative;
-    width: 12.5%;
-    padding-top: 12.5%;
-}
-
-.cell-click-zone {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    margin: 5%;
-    height: 100%;
-    width: 100%;
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-.cell-piece {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    text-align: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-    .cell-piece span {
-        font-size: 3vw;
-        color: white;
-        display: block;
-        position: relative;
-        top: 50%;
-        transform: translateY(-50%);
+    ul#main-menu li {
+        float: left;
+        margin: 1px;
     }
+
+        ul#main-menu li a {
+            width: 100px;
+            display: block;
+            padding: 16px;
+            color: brown;
+            background-color: antiquewhite;
+            text-decoration: none;
+            text-align: center;
+            font-size: x-large;
+        }
+
+            ul#main-menu li a:hover {
+                background-color: burlywood;
+            }

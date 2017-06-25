@@ -148,7 +148,6 @@ var updateWithMove = function (msg) {
         notifyPlayerTurnPhaseOne();
     else
         notifyOpponentTurn();
-    //TO DO maybe tell who is to move... or highlight roll dice button etc
 }
 
 //From ws server

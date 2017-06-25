@@ -24,6 +24,7 @@ var joinGame = function (sender, msg) {
                 bp = sender;
             }
             var newGame = {
+                spectators: [],
                 id: msg.code,
                 whitePlayer: wp,
                 blackPlayer: bp,
@@ -33,6 +34,9 @@ var joinGame = function (sender, msg) {
                     blackPieces: [7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }
             }
+            //add game to spectating list
+            global.spectateGameList[msg.code] = Date.now();
+            //add game to active game list
             global.activeGames[msg.code] = newGame;
             sender.urActiveGame = msg.code;
             host.urActiveGame = msg.code;

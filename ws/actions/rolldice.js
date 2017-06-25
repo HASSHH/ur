@@ -62,6 +62,10 @@ var rollDice = function (sender, msg) {
                 }
                 sender.sendUTF(JSON.stringify(resp));
                 opponent.sendUTF(JSON.stringify(resp));
+                //send to all spectators
+                var specCount = game.spectators.length;
+                for (var i = 0; i < specCount; ++i)
+                    game.spectators[i].sendUTF(JSON.stringify(resp));
             }
         }
     }

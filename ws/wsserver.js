@@ -1,7 +1,11 @@
 ﻿'use strict'
 
+//a collection of games that are in waiting mode: no one has joined them
 global.waitingRoom = {};
+//games that are active
 global.activeGames = {};
+//a list of active games that can be spectated: pairs (gameId, timeStarted)
+global.spectateGameList = {};
 
 var webSocketServer = require('websocket').server;
 var utils = require('./utils');
@@ -11,6 +15,7 @@ var joinGameAction = require('./actions/joingame').joinGame;
 var rollDiceAction = require('./actions/rolldice').rollDice;
 var doMoveAction = require('./actions/domove').doMove;
 var rematchAction = require('./actions/rematch').rematch;
+var spectateAction = require('./actions/spectate').spectate;
 
 var wsServer = new webSocketServer({
     httpServer: httpserver,
@@ -39,12 +44,16 @@ wsServer.on('request', function (request) {
             case 'rematch':
                 rematchAction(connection, msg.body);
                 break;
+            case 'spectate':
+                spectateAction(connection, msg.body);
+                break;
             default:
                 break;
         }
     });
     connection.on('close', function (reasonCode, description) {
         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+        utils.removeSpectator(connection);
         utils.removeFromWaiting(connection);
         utils.removeFromActive(connection);
     });

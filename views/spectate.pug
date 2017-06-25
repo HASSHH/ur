@@ -1,0 +1,17 @@
+﻿extends layout
+
+block content
+  h2 Game list:
+  button(onclick='refreshList()') Refresh
+  table(id='games-table')
+    thead
+      tr
+        th ID
+        th Date
+    tbody(id='table-body')
+      each game in Object.keys(games)
+        tr
+          td: a(href='/spectate/'+game)=game
+          td= games[game]
+
+  script(type='text/javascript', src='/javascripts/spectate_list.js')
