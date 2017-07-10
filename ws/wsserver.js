@@ -27,29 +27,33 @@ wsServer.on('request', function (request) {
     console.log((new Date()) + ' Connection accepted.');
     connection.on('message', function (message) {
         console.log(message.utf8Data);
-        var msg = JSON.parse(message.utf8Data);
-        switch (msg.action) {
-            case 'start-new-game':
-                newGameAction(connection, msg.body);
-                break;
-            case 'join-game':
-                joinGameAction(connection, msg.body);
-                break;
-            case 'roll-dice':
-                rollDiceAction(connection, msg.body);
-                break;
-            case 'do-move':
-                doMoveAction(connection, msg.body);
-                break;
-            case 'rematch':
-                rematchAction(connection, msg.body);
-                break;
-            case 'spectate':
-                spectateAction(connection, msg.body);
-                break;
-            default:
-                break;
+        try {
+            var msg = JSON.parse(message.utf8Data);
+            if (typeof msg.action !== 'undefined')
+            switch (msg.action) {
+                case 'start-new-game':
+                    newGameAction(connection, msg.body);
+                    break;
+                case 'join-game':
+                    joinGameAction(connection, msg.body);
+                    break;
+                case 'roll-dice':
+                    rollDiceAction(connection, msg.body);
+                    break;
+                case 'do-move':
+                    doMoveAction(connection, msg.body);
+                    break;
+                case 'rematch':
+                    rematchAction(connection, msg.body);
+                    break;
+                case 'spectate':
+                    spectateAction(connection, msg.body);
+                    break;
+                default:
+                    break;
+            }
         }
+        catch(e){}
     });
     connection.on('close', function (reasonCode, description) {
         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
