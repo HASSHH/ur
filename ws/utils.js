@@ -75,6 +75,39 @@ var checkMove = function (cell, color, id) {
     }
 }
 
+var getSortedSpectateList = function (gameList) {
+    var spectateList = [];
+
+    for (var gameID in gameList) {
+        var started = gameList[gameID].started;
+        var seconds = (Date.now() - started) / 1000 >> 0;
+        var minutes = seconds / 60 >> 0;
+        var hours = minutes / 60 >> 0;
+        var days = hours / 24 >> 0;
+        var text = '> ';
+        if (days > 0)
+            text += days + (days > 1 ? ' days' : ' day');
+        else if (hours > 0)
+            text += hours + (hours > 1 ? ' hours' : ' hour');
+        else if (minutes > 0)
+            text += minutes + (minutes > 1 ? ' minutes' : ' minute');
+        else
+            text += seconds + (seconds > 1 ? ' seconds' : ' second');
+        spectateList.push({ id: gameID, started: started, text: text });
+    }
+    //sort descending by time started
+    spectateList.sort(function (a, b) {
+        if (a.started > b.started)
+            return -1;
+        else if (a.started < b.started)
+            return 1;
+        else
+            return 0;
+    });
+    return spectateList;
+}
+
+exports.getSortedSpectateList = getSortedSpectateList;
 exports.removeFromWaiting = removeFromWaiting;
 exports.removeFromActive = removeFromActive;
 exports.removeSpectator = removeSpectator;

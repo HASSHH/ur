@@ -150,6 +150,20 @@ var updateWithMove = function (msg) {
         notifyOpponentTurn();
 }
 
+var messageReceived = function (msg) {
+    //Create new message bubble (left)
+    var bubble = document.createElement('div');
+    bubble.className = 'message-box left-message';
+    var text = document.createElement('span');
+    text.innerText = msg.text;
+    bubble.appendChild(text);
+    //add bubble to message container
+    var messages = document.getElementById('chat-content');
+    messages.appendChild(bubble);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+
 //From ws server
 socket.onmessage = function (message) {
     var msg = JSON.parse(message.data);
@@ -168,6 +182,9 @@ socket.onmessage = function (message) {
             break;
         case 'opponent-left':
             opponentLeft(msg.body);
+            break;
+        case 'message-received':
+            messageReceived(msg.body);
             break;
         default:
             break;
@@ -212,6 +229,32 @@ var doMove = function (move) {
         }
     };
     socket.send(JSON.stringify(msg));
+}
+
+var sendMessage = function () {
+    var messageInput = document.getElementById('message-input');
+    var messageText = messageInput.value;
+    if (/\S/.test(messageText)) {
+        messageInput.value = '';
+        var msg = {
+            action: 'send-message',
+            body: {
+                id: gameId,
+                text: messageText
+            }
+        };
+        socket.send(JSON.stringify(msg));
+        //Create new message bubble (right)
+        var bubble = document.createElement('div');
+        bubble.className = 'message-box right-message';
+        var text = document.createElement('span');
+        text.innerText = messageText;
+        bubble.appendChild(text);
+        //add bubble to message container
+        var messages = document.getElementById('chat-content');
+        messages.appendChild(bubble);
+        messages.scrollTop = messages.scrollHeight;
+    }
 }
 
 //notifications messages
@@ -383,7 +426,6 @@ for (var i = 0, len = clickableCells.length; i < len; i++) {
 // ---- NOT GAMEPLAY RELATED ----- //
 // ------------------------------- //
 
-
 var activeElm = document.getElementById("intro-div");
 var showBoardDiv = function () {
     var old = activeElm;
@@ -407,7 +449,7 @@ var showJoinDiv = function () {
     });
 }
 
-function fadeout(element, callback) {
+var fadeout = function(element, callback) {
     var op = 1;  // initial opacity
     element.style.opacity = op;
     element.style.filter = 'alpha(opacity=' + op * 100 + ")";
@@ -424,7 +466,7 @@ function fadeout(element, callback) {
     }, 20);
 }
 
-function fadein(element, callback) {
+var fadein = function(element, callback) {
     var op = 0.05;  // initial opacity
     element.style.opacity = op;
     element.style.filter = 'alpha(opacity=' + op * 100 + ")";
@@ -440,3 +482,11 @@ function fadein(element, callback) {
         op += op * 0.05;
     }, 5);
 }
+
+var messageinput_onkeyup = function (e) {
+    if (e.keyCode === 13)
+        //Enter key is pressed on input
+        sendMessage();
+}
+
+document.getElementById('message-input').addEventListener('keyup', messageinput_onkeyup);

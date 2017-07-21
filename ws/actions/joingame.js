@@ -35,7 +35,7 @@ var joinGame = function (sender, msg) {
                 }
             }
             //add game to spectating list
-            global.spectateGameList[msg.code] = Date.now();
+            global.spectateGameList[msg.code] = { started: Date.now() };
             //add game to active game list
             global.activeGames[msg.code] = newGame;
             sender.urActiveGame = msg.code;

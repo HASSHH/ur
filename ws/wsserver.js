@@ -16,6 +16,7 @@ var rollDiceAction = require('./actions/rolldice').rollDice;
 var doMoveAction = require('./actions/domove').doMove;
 var rematchAction = require('./actions/rematch').rematch;
 var spectateAction = require('./actions/spectate').spectate;
+var sendMessage = require('./actions/sendmessage').sendMessage;
 
 var wsServer = new webSocketServer({
     httpServer: httpserver,
@@ -48,6 +49,9 @@ wsServer.on('request', function (request) {
                     break;
                 case 'spectate':
                     spectateAction(connection, msg.body);
+                    break;
+                case 'send-message':
+                    sendMessage(connection, msg.body);
                     break;
                 default:
                     break;

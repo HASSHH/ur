@@ -1,6 +1,7 @@
 ﻿'use strict';
 var express = require('express');
 var router = express.Router();
+var utils = require('../ws/utils')
 
 /* GET home page. */
 router.get('/', function (req, res) {
@@ -14,7 +15,8 @@ router.get('/play', function (req, res) {
 
 /* GET spectate page. */
 router.get('/spectate', function (req, res) {
-    res.render('spectate', { games: global.spectateGameList });
+    var spectateList = utils.getSortedSpectateList(global.spectateGameList);
+    res.render('spectate', { games: spectateList });
 });
 
 router.get('/spectate/:id', function (req, res) {
@@ -23,7 +25,8 @@ router.get('/spectate/:id', function (req, res) {
 
 /* called when a spec list refresh is needed; returns only the list*/
 router.get('/spectate-list', function (req, res) {
-    res.send(global.spectateGameList);
+    var spectateList = utils.getSortedSpectateList(global.spectateGameList);
+    res.send(spectateList);
 });
 
 module.exports = router;

@@ -34,6 +34,7 @@
     }
 
 #board-container {
+    float: left;
     width: 60%;
 }
 
@@ -84,4 +85,88 @@
         position: relative;
         top: 50%;
         transform: translateY(-50%);
+    }
+
+#chat-div {
+    margin-left: 20px;
+    float: left;
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    background-color: lightgrey;
+}
+
+#chat-content {
+    flex: 1 1 0%;
+    display: block;
+    overflow-y: scroll;
+    height: 0px;
+}
+
+#chat-footer {
+    display: flex;
+    height: 30px;
+    width: 100%;
+}
+
+.flex-container {
+    display: flex;
+}
+
+#message-input {
+    flex: 1 0 0%;
+}
+
+.message-box {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    position: relative;
+    width: 80%;
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+    .message-box::before {
+        content: '';
+        position: absolute;
+        visibility: visible;
+        top: -1px;
+        border: 10px solid transparent;
+        border-top: 10px solid #ccc;
+    }
+    .message-box::after {
+        content: '';
+        position: absolute;
+        visibility: visible;
+        top: 0px;
+        border: 10px solid transparent;
+        clear: both;
+    }
+
+.right-message {
+    background-color: aliceblue;
+    text-align: right;
+    float: right;
+    right: 20px;
+}
+    .right-message::before {
+        right: -10px;
+    }
+    .right-message::after {
+        right: -8px;
+        border-top: 10px solid aliceblue;
+    }
+
+.left-message {
+    background-color: aqua;
+    text-align: left;
+    float: left;
+    left: 20px;
+}
+    .left-message::before {
+        left: -10px;
+    }
+    .left-message::after {
+        left: -8px;
+        border-top: 10px solid aqua;
     }

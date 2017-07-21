@@ -3,15 +3,16 @@
 block content
   h2 Game list:
   button(onclick='refreshList()') Refresh
-  table(id='games-table')
+  table(id='games-table', class='sortable')
     thead
       tr
         th ID
         th Date
     tbody(id='table-body')
-      each game in Object.keys(games)
+      each game in games
         tr
-          td: a(href='/spectate/'+game)=game
-          td= games[game]
+          td: a(href='/spectate/'+game.id)=game.id
+          td(sorttable_customkey=game.started)= game.text
 
+  script(type='text/javascript', src='/javascripts/sorttable.js')
   script(type='text/javascript', src='/javascripts/spectate_list.js')

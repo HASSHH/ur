@@ -19,17 +19,17 @@ var removeAllRows = function () {
 
 var addNewRows = function (games) {
     var tbody = document.getElementById('table-body');
-    var keys = Object.keys(games);
-    for (var i = 0; i < keys.length; ++i){
-        var game = keys[i];
+    for (var i = 0; i < games.length; ++i){
+        var game = games[i];
         var tr = document.createElement('tr');
         var tdId = document.createElement('td');
         var anchor = document.createElement('a');
-        anchor.href = '/spectate/' + game;
-        anchor.innerHTML = game;
+        anchor.href = '/spectate/' + game.id;
+        anchor.innerHTML = game.id;
         tdId.appendChild(anchor);
         var tdDate = document.createElement('td');
-        tdDate.innerHTML = games[game];
+        tdDate.sorttable_customkey = game.started;
+        tdDate.innerHTML = game.text;
         tr.appendChild(tdId);
         tr.appendChild(tdDate);
         tbody.appendChild(tr);
